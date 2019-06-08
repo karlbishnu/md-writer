@@ -19,6 +19,8 @@ class NewFileView extends View
       @div =>
         @label "Directory", class: "message"
         @subview "pathEditor", new TextEditorView(mini: true)
+        @label "Category", class: "message"
+        @subview "categoryEditor", new TextEditorView(mini: true)
         @label "Date", class: "message"
         @subview "dateEditor", new TextEditorView(mini: true)
         @label "Title", class: "message"
@@ -40,8 +42,8 @@ class NewFileView extends View
       value: value
 
   initialize: ->
-    editors = [@titleEditor, @pathEditor, @dateEditor]
-    editors.push(@[f["editor"]]) for f in @constructor.getCustomFields()
+    editors = [@titleEditor, @pathEditor, @categoryEditor, @dateEditor]
+    # editors.push(@[f["editor"]]) for f in @constructor.getCustomFields()
     # set tab orders
     utils.setTabIndex(editors)
 
@@ -50,6 +52,8 @@ class NewFileView extends View
 
     @titleEditor.getModel().onDidChange => @updatePath()
     @pathEditor.getModel().onDidChange => @updatePath()
+    @categoryEditor.getModel().onDidChange => @updatePath()
+
     # update pathEditor to reflect date changes, however this will overwrite user changes
     @dateEditor.getModel().onDidChange =>
       @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @getDateTime()))
@@ -65,10 +69,10 @@ class NewFileView extends View
     @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
     @previouslyFocusedElement = $(document.activeElement)
     @dateEditor.setText(templateHelper.getFrontMatterDate(@dateTime))
-    @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @dateTime))
+    @pathEditor.setText(templateHelper.create(@constructor.pathConfig, @categoryEditor, @dateTime))
     @[f["editor"]].setText(f["value"]) for f in @constructor.getCustomFields() when !!f["value"]
     @panel.show()
-    @titleEditor.focus()
+    @categoryEditor.focus()
 
   detach: ->
     if @panel.isVisible()
@@ -107,17 +111,20 @@ class NewFileView extends View
   getSlug: -> utils.slugize(@getTitle(), config.get('slugSeparator'))
   getDate: -> templateHelper.getFrontMatterDate(@getDateTime())
   getExtension: -> config.get("fileExtension")
+  getCategory: -> utils.toTitleCase(@categoryEditor.getText())
 
   # new file and front matters
   getFileDir: ->
     filePath = atom.workspace.getActiveTextEditor()?.getPath() # Nullable
     utils.getSitePath(config.get("siteLocalDir"), filePath)
-  getFilePath: -> path.join(@pathEditor.getText(), @getFileName())
+  getFilePath: -> path.join(@pathEditor.getText(), @categoryEditor.getText(), @getFileName())
 
   getFileName: -> templateHelper.create(@constructor.fileNameConfig, @getFrontMatter(), @getDateTime())
   getDateTime: -> templateHelper.parseFrontMatterDate(@dateEditor.getText()) || @dateTime
   getFrontMatter: ->
     base = templateHelper.getFrontMatter(this)
+    base["category"] = @getCategory()
     # add custom fields to frontMatter
     base[f["id"]] = @[f["editor"]].getText() for f in @constructor.getCustomFields()
+    console.log(base)
     base

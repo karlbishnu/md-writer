@@ -13,7 +13,7 @@
 
 # Static engine of your blog
 # - One of: general, html, jekyll, octopress, hexo
-siteEngine: "general"
+siteEngine: "jekyll"
 # Website URL of your blog
 siteUrl: ""
 
@@ -23,10 +23,10 @@ siteLocalDir: ""
 # Directory to drafts from siteLocalDir
 siteDraftsDir: "_drafts/"
 # Directory to posts from siteLocalDir
-sitePostsDir: "_posts/{year}/"
+sitePostsDir: "_posts/"
 # Directory to images from siteLocalDir
 # - E.g. to use the current filename directory, can use {directory}
-siteImagesDir: "images/{year}/{month}/"
+siteImagesDir: "/assets/post-img/"
 
 # URLs to tags/posts/categories JSON files
 # https://github.com/zhuochun/md-writer/wiki/Settings-for-Front-Matters
@@ -36,7 +36,7 @@ urlForCategories: ""
 
 # The front matter key name
 frontMatterNameTags: "tags"
-frontMatterNameCategories: "categories"
+frontMatterNameCategories: "category"
 
 # Filename format of new drafts created
 newDraftFileName: "{slug}{extension}"
@@ -51,16 +51,26 @@ newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
 # Front matter date format, determines the {date} in frontMatter
 frontMatterDate: "{year}-{month}-{day} {hour}:{minute}"
 # Front matter template
-frontMatter: """
----
-layout: "{layout}"
-title: "{title}"
-date: "{date}"
----
-"""
+frontMatter: '''
+  ---
+  layout: "{layout}"
+  title: "{title}"
+  date: "{date}"
+  permalink: "/{category}/:year/:month/:day/:title/"
+  category: "{category}"
+  tags: "[{category}]"
+  comments: true
+  ---
+
+  * TOC
+  {:toc}
+
+  ### NOTE
+  블로그라기 보다는 생각나는 생각나는 대로 두서없이 적는 낙서장이라고 보면 될것 같다.
+'''
 
 # File extension of posts/drafts
-fileExtension: ".markdown"
+fileExtension: ".md"
 # File slug separator
 slugSeparator: "-"
 

@@ -665,6 +665,9 @@ findLinkInRange = (editor, range) ->
     link.definitionRange = range
     return link
 
+toTitleCase = (str) ->
+    return str.replace /\w\S*/g, (txt) -> # see comment below
+        txt[0].toUpperCase() + txt[1..txt.length - 1].toLowerCase()
 # ==================================================
 # Exports
 #
@@ -720,3 +723,4 @@ module.exports =
 
   getTextBufferRange: getTextBufferRange
   findLinkInRange: findLinkInRange
+  toTitleCase: toTitleCase
