@@ -41,7 +41,7 @@ frontMatterNameCategories: "category"
 # Filename format of new drafts created
 newDraftFileName: "{slug}{extension}"
 # Filename format of new posts created
-newPostFileName: "{year}-{month}-{day}-{slug}{extension}"
+newPostFileName: "{year}-{month}-{day}-{seq}-{slug}{extension}"
 
 # Front matter add custom fields
 # - Configured as a key-value pair (fieldName: defaultValue)

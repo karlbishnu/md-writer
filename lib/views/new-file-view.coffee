@@ -119,12 +119,20 @@ class NewFileView extends View
     utils.getSitePath(config.get("siteLocalDir"), filePath)
   getFilePath: -> path.join(@pathEditor.getText(), @categoryEditor.getText(), @getFileName())
 
+  getSequence: ->
+    filepath = path.join(@getFileDir(), @pathEditor.getText(), @categoryEditor.getText())
+    fileNameTemplate = config.get(@constructor.fileNameConfig)
+    fileNameTemplateWithoutSlug = fileNameTemplate.substring(0,fileNameTemplate.indexOf("{seq}")-1)
+    fileNamePrefix = utils.template(fileNameTemplateWithoutSlug, @getDateTime())
+    filePrefix = path.join(filepath, fileNamePrefix)
+    before = fs.listSync(filepath, [@getExtension()])
+    before.filter((p) => p.startsWith(filePrefix)).length+1
   getFileName: -> templateHelper.create(@constructor.fileNameConfig, @getFrontMatter(), @getDateTime())
   getDateTime: -> templateHelper.parseFrontMatterDate(@dateEditor.getText()) || @dateTime
   getFrontMatter: ->
     base = templateHelper.getFrontMatter(this)
     base["category"] = @getCategory()
+    base["seq"] = @getSequence()
     # add custom fields to frontMatter
     base[f["id"]] = @[f["editor"]].getText() for f in @constructor.getCustomFields()
-    console.log(base)
     base
