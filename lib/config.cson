@@ -58,15 +58,12 @@ frontMatter: '''
   date: "{date}"
   permalink: "/{category}/:year/:month/:day/:title/"
   category: "{category}"
-  tags: "[{category}]"
+  tags: [{category}]
   comments: true
   ---
 
   * TOC
   {:toc}
-
-  ### NOTE
-  블로그라기 보다는 생각나는 생각나는 대로 두서없이 적는 낙서장이라고 보면 될것 같다.
 '''
 
 # File extension of posts/drafts
