@@ -666,7 +666,7 @@ findLinkInRange = (editor, range) ->
     return link
 
 toTitleCase = (str) ->
-    return str.replace /\w\S*/g, (txt) -> # see comment below
+    return str.replace(/_/g, " ").replace /\w\S*/g, (txt) ->
         txt[0].toUpperCase() + txt[1..txt.length - 1].toLowerCase()
 # ==================================================
 # Exports
