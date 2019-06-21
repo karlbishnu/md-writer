@@ -112,15 +112,15 @@ class NewFileView extends View
   getDate: -> templateHelper.getFrontMatterDate(@getDateTime())
   getExtension: -> config.get("fileExtension")
   getCategory: -> utils.toTitleCase(@categoryEditor.getText())
-
+  getCategoryUrl: -> utils.slugize(@categoryEditor.getText(), config.get('slugSeparator'))
   # new file and front matters
   getFileDir: ->
     filePath = atom.workspace.getActiveTextEditor()?.getPath() # Nullable
     utils.getSitePath(config.get("siteLocalDir"), filePath)
-  getFilePath: -> path.join(@pathEditor.getText(), @categoryEditor.getText(), @getFileName())
+  getFilePath: -> path.join(@pathEditor.getText(), @getCategoryUrl(), @getFileName())
 
   getSequence: ->
-    filepath = path.join(@getFileDir(), @pathEditor.getText(), @categoryEditor.getText())
+    filepath = path.join(@getFileDir(), @pathEditor.getText(), @getCategoryUrl())
     fileNameTemplate = config.get(@constructor.fileNameConfig)
     fileNameTemplateWithoutSlug = fileNameTemplate.substring(0,fileNameTemplate.indexOf("{seq}")-1)
     fileNamePrefix = utils.template(fileNameTemplateWithoutSlug, @getDateTime())
@@ -132,6 +132,7 @@ class NewFileView extends View
   getFrontMatter: ->
     base = templateHelper.getFrontMatter(this)
     base["category"] = @getCategory()
+    base["category-url"] = @getCategoryUrl()
     base["seq"] = @getSequence()
     # add custom fields to frontMatter
     base[f["id"]] = @[f["editor"]].getText() for f in @constructor.getCustomFields()

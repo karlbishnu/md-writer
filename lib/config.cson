@@ -56,7 +56,7 @@ frontMatter: '''
   layout: "{layout}"
   title: "{title}"
   date: "{date}"
-  permalink: "/{category}/:year/:month/:day/:title/"
+  permalink: "/{category-url}/:year/:month/:day/:title/"
   category: "{category}"
   tags: [{category}]
   comments: true
